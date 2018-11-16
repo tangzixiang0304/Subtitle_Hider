@@ -1,6 +1,3 @@
-import org.w3c.dom.css.CSSPrimitiveValue;
-import org.w3c.dom.css.Rect;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -11,26 +8,26 @@ public class ClickedPanel extends JPanel {
     private int left = 50;
     private int top = 200;
     private int width = 800;
-    private int height = 100;
+    private int height = 70;
     private int leftToMouse;
     private int upToMouse;
     private int moveOrChangeSizeFlag_Drag = 0;
     private boolean is_hide;
-    private boolean hide_and_overlapped;
     private ButtonRect back_and_hide = new ButtonRect(left + width / 3, top, 2 * width / 15, height, "back and hide");
     private ButtonRect hide = new ButtonRect(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height, "hide");
-    private ButtonRect close = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 15, height / 2, "close");
+    private ButtonRect set_back_time = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 15, height / 2, "set back time");
     private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2, "calibrate");
+    private ButtonRect close = new ButtonRect(left + width * 19 / 20, top, width / 20, height / 10, "close");
 
     private void back_and_hide_clicked() {
 
     }
 
     private void hide_clicked() {
-        is_hide = true;
+        is_hide = !is_hide;
     }
 
-    private void close_clicked() {
+    private void set_back_time_clicked() {
 
     }
 
@@ -38,21 +35,28 @@ public class ClickedPanel extends JPanel {
 
     }
 
+
+    private void close_clicked(){
+        
+    }
+
     private void resizeAndPaintAllButtons(Graphics2D g2d) {
         back_and_hide.setBound(left + width / 3, top, 2 * width / 15, height);
         hide.setBound(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height);
-        close.setBound(left + width / 3 + width * 4 / 15, top, width / 15, height / 2);
+        set_back_time.setBound(left + width / 3 + width * 4 / 15, top, width / 15, height / 2);
         calibration.setBound(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2);
+        close.setBound(left + width-width/50, top, width / 50, height / 4);
 
         back_and_hide.paintRect(g2d, Color.darkGray, is_hide);
         hide.paintRect(g2d, Color.lightGray, is_hide);
-        close.paintRect(g2d, Color.black, is_hide);
+        set_back_time.paintRect(g2d, Color.black, is_hide);
         calibration.paintRect(g2d, Color.darkGray, is_hide);
+        close.paintRect(g2d, Color.red, is_hide);
     }
 
 
     private int judgeFlag(int x, int y) {
-        int changeSizeBorder = 10;
+        int changeSizeBorder = 5;
         if (Math.abs(x - left) < changeSizeBorder) {
             return 1;
         }
@@ -77,12 +81,16 @@ public class ClickedPanel extends JPanel {
             return 6;
         }
 
-        if (close.pointInRect(x, y)) {
+        if (set_back_time.pointInRect(x, y)) {
             return 7;
         }
 
         if (calibration.pointInRect(x, y)) {
             return 8;
+        }
+
+        if(close.pointInRect(x,y)){
+            return 9;
         }
         moveOrChangeSizeFlag_Drag = 0;
         leftToMouse = x - left;
@@ -139,6 +147,7 @@ public class ClickedPanel extends JPanel {
                 case 6:
                 case 7:
                 case 8:
+                case 9:
                     setCursor(new Cursor(Cursor.HAND_CURSOR));
                     break;
 
@@ -146,8 +155,9 @@ public class ClickedPanel extends JPanel {
 
             hide.isOverlapped = hide.pointInRect(x, y);
             back_and_hide.isOverlapped = back_and_hide.pointInRect(x, y);
-            close.isOverlapped = close.pointInRect(x, y);
+            set_back_time.isOverlapped = set_back_time.pointInRect(x, y);
             calibration.isOverlapped = calibration.pointInRect(x, y);
+            close.isOverlapped=close.pointInRect(x,y);
             repaint();
         }
     };
@@ -157,11 +167,6 @@ public class ClickedPanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            if (is_hide) {
-                is_hide = false;
-                repaint();
-                return;
-            }
             switch (judgeFlag(e.getX(), e.getY())) {
                 case 5:
                     back_and_hide_clicked();
@@ -170,10 +175,13 @@ public class ClickedPanel extends JPanel {
                     hide_clicked();
                     break;
                 case 7:
-                    close_clicked();
+                    set_back_time_clicked();
                     break;
                 case 8:
                     calibration_clicked();
+                    break;
+                case 9:
+                    close_clicked();
                     break;
             }
             repaint();
@@ -181,19 +189,15 @@ public class ClickedPanel extends JPanel {
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            if (is_hide)
-                hide_and_overlapped = true;
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            if (is_hide){
-                hide_and_overlapped = false;
+            if (is_hide) {
                 hide.isOverlapped = false;
                 back_and_hide.isOverlapped = false;
-                close.isOverlapped = false;
+                set_back_time.isOverlapped = false;
                 calibration.isOverlapped = false;
-
             }
 
             repaint();
@@ -226,15 +230,10 @@ public class ClickedPanel extends JPanel {
         super.paint(g2);
         g2.setColor(Color.gray);
         if (is_hide) {
-            if (hide_and_overlapped)
-                g2.setColor(Color.lightGray);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     0.5f));
         }
         g2.fillRect(left, top, width, height);
         resizeAndPaintAllButtons(g2);
-
     }
-
-
 }
