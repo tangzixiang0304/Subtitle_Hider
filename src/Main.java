@@ -11,7 +11,6 @@ public class Main {
 
     public static void main(String[] args) {
         JFrame frame=new JFrame() {
-
 //			 @Override
 //			 public void paint(Graphics g) {
 //			 // TODO 自动生成方法存根  半透明
@@ -20,8 +19,7 @@ public class Main {
 //			 0.5f));
 //			 super.paint(G2);
 //			 }
-
-        };;
+        };
         Dimension screenSize= Toolkit.getDefaultToolkit().getScreenSize();
         frame.setUndecorated(true);
         frame.add(new ClickedPanel());
@@ -29,6 +27,7 @@ public class Main {
         frame.setSize(new Dimension(screenSize.width,screenSize.height));
         AWTUtilities.setWindowOpaque(frame, false);
         frame.setVisible(true);
+        frame.setAlwaysOnTop(true);
     }
 
 }

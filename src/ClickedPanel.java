@@ -16,37 +16,38 @@ public class ClickedPanel extends JPanel {
     private int upToMouse;
     private int moveOrChangeSizeFlag_Drag = 0;
     private boolean is_hide;
-    private ButtonRect back_and_hide =new ButtonRect(left+width/3,top,2*width/15,height,"back and hide");
-    private ButtonRect hide=new ButtonRect(left+width/3+width*2/15,top,width*2/15,height,"hide");
-    private ButtonRect close=new ButtonRect(left+width/3+width*4/15,top,width/15,height/2,"close");
-    private ButtonRect calibration=new ButtonRect(left+width/3+4*width/15,top+height/2,width/15,height/2,"calibrate");
+    private boolean hide_and_overlapped;
+    private ButtonRect back_and_hide = new ButtonRect(left + width / 3, top, 2 * width / 15, height, "back and hide");
+    private ButtonRect hide = new ButtonRect(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height, "hide");
+    private ButtonRect close = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 15, height / 2, "close");
+    private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2, "calibrate");
 
-    private void back_and_hide_clicked(){
-
-    }
-
-    private void hide_clicked(){
-        is_hide=!is_hide;
-    }
-
-    private void close_clicked(){
+    private void back_and_hide_clicked() {
 
     }
 
-    private void calibration_clicked(){
+    private void hide_clicked() {
+        is_hide = true;
+    }
+
+    private void close_clicked() {
 
     }
 
-    private void resizeAndPaintAllButtons(Graphics2D g2d){
-        back_and_hide.setBound(left+width/3,top,2*width/15,height);
-        hide.setBound(left+width/3+width*2/15,top,width*2/15,height);
-        close.setBound(left+width/3+width*4/15,top,width/15,height/2);
-        calibration.setBound(left+width/3+4*width/15,top+height/2,width/15,height/2);
+    private void calibration_clicked() {
 
-        back_and_hide.paintRect(g2d,Color.darkGray,is_hide);
-        hide.paintRect(g2d,Color.lightGray,is_hide);
-        close.paintRect(g2d,Color.black,is_hide);
-        calibration.paintRect(g2d,Color.darkGray,is_hide);
+    }
+
+    private void resizeAndPaintAllButtons(Graphics2D g2d) {
+        back_and_hide.setBound(left + width / 3, top, 2 * width / 15, height);
+        hide.setBound(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height);
+        close.setBound(left + width / 3 + width * 4 / 15, top, width / 15, height / 2);
+        calibration.setBound(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2);
+
+        back_and_hide.paintRect(g2d, Color.darkGray, is_hide);
+        hide.paintRect(g2d, Color.lightGray, is_hide);
+        close.paintRect(g2d, Color.black, is_hide);
+        calibration.paintRect(g2d, Color.darkGray, is_hide);
     }
 
 
@@ -68,19 +69,19 @@ public class ClickedPanel extends JPanel {
             return 4;
         }
 
-        if(back_and_hide.pointInRect(x,y)){
+        if (back_and_hide.pointInRect(x, y)) {
             return 5;
         }
 
-        if(hide.pointInRect(x,y)){
+        if (hide.pointInRect(x, y)) {
             return 6;
         }
 
-        if(close.pointInRect(x,y)){
+        if (close.pointInRect(x, y)) {
             return 7;
         }
 
-        if(calibration.pointInRect(x,y)){
+        if (calibration.pointInRect(x, y)) {
             return 8;
         }
         moveOrChangeSizeFlag_Drag = 0;
@@ -120,7 +121,9 @@ public class ClickedPanel extends JPanel {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            switch (judgeFlag(e.getX(), e.getY())) {
+            int x = e.getX();
+            int y = e.getY();
+            switch (judgeFlag(x, y)) {
                 case 0:
                     setCursor(new Cursor(Cursor.MOVE_CURSOR));
                     break;
@@ -132,7 +135,20 @@ public class ClickedPanel extends JPanel {
                 case 4:
                     setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
                     break;
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                    setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    break;
+
             }
+
+            hide.isOverlapped = hide.pointInRect(x, y);
+            back_and_hide.isOverlapped = back_and_hide.pointInRect(x, y);
+            close.isOverlapped = close.pointInRect(x, y);
+            calibration.isOverlapped = calibration.pointInRect(x, y);
+            repaint();
         }
     };
 
@@ -141,7 +157,12 @@ public class ClickedPanel extends JPanel {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-            switch (judgeFlag(e.getX(),e.getY())){
+            if (is_hide) {
+                is_hide = false;
+                repaint();
+                return;
+            }
+            switch (judgeFlag(e.getX(), e.getY())) {
                 case 5:
                     back_and_hide_clicked();
                     break;
@@ -156,11 +177,30 @@ public class ClickedPanel extends JPanel {
                     break;
             }
             repaint();
-
         }
 
         @Override
-        public void mouseReleased(MouseEvent e){
+        public void mouseEntered(MouseEvent e) {
+            if (is_hide)
+                hide_and_overlapped = true;
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            if (is_hide){
+                hide_and_overlapped = false;
+                hide.isOverlapped = false;
+                back_and_hide.isOverlapped = false;
+                close.isOverlapped = false;
+                calibration.isOverlapped = false;
+
+            }
+
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
 
         }
 
@@ -183,18 +223,15 @@ public class ClickedPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
-
-
         super.paint(g2);
         g2.setColor(Color.gray);
-        if(is_hide)
+        if (is_hide) {
+            if (hide_and_overlapped)
+                g2.setColor(Color.lightGray);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                     0.5f));
-
-
-
-
-        g2.fillRect(left,top,width,height);
+                    0.5f));
+        }
+        g2.fillRect(left, top, width, height);
         resizeAndPaintAllButtons(g2);
 
     }

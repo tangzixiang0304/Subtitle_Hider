@@ -6,6 +6,8 @@ public class ButtonRect {
     int top;
     int width;
     int height;
+    boolean isOverlapped;
+
     public ButtonRect(int left,int top ,int width,int height,String title){
         this.left=left;
         this.top=top;
@@ -30,9 +32,21 @@ public class ButtonRect {
 
     public void paintRect(Graphics2D g,Color color,boolean hide){
         g.setColor(color);
-
-        if(!hide)
+        if(!hide){
+            if(isOverlapped){
+                g.setColor(Color.white);
+            }
             g.fillRect(left,top,width,height);
+        }
+
+        if(hide){
+            if(isOverlapped){
+                g.setColor(Color.black);
+                g.drawRect(left,top,width,height);
+            }
+        }
+
+
     }
 
 }
