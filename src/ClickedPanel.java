@@ -1,10 +1,9 @@
 import com.sun.awt.AWTUtilities;
+import javafx.scene.input.KeyCode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 public class ClickedPanel extends JPanel {
     private int left = 50;
@@ -16,28 +15,27 @@ public class ClickedPanel extends JPanel {
     private int moveOrChangeSizeFlag_Drag = 0;
     public boolean is_hide;
     public int backTime = 2;
-    private ButtonRect back_and_hide = new ButtonRect(left + width / 3, top, 2 * width / 15, height, "back and hide");
-    private ButtonRect hide = new ButtonRect(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height, "hide");
-    private ButtonRect set_back_time = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 15, height / 2, "set back time");
-    private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2, "calibrate");
-    private ButtonRect close = new ButtonRect(left + width * 19 / 20, top, width / 20, height / 10, "close");
+    private ButtonRect back_and_hide = new ButtonRect(left + width / 3, top, 2 * width / 15, height, "BACK");
+    private ButtonRect hide = new ButtonRect(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height, "HIDE");
+    public ButtonRect set_back_time = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 5, height / 2, "Back time:2s");
+    private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 5, height / 2, "Calibrate");
+    private ButtonRect close = new ButtonRect(left + width-width/19, top, width / 19, width/19, "");
     private HiderFrame hiderFrame;
     private CalibrateFrame calibrateFrame = new CalibrateFrame();
-    public SetBackTimeFrame setBackTimeFrame=new SetBackTimeFrame(this);
 
-    private void back_and_hide_clicked(Point sourcePoint) {
+    public void back_and_hide_clicked() {
         HideAndBackThread hideAndBackThread;
-        System.out.println(backTime);
-        hideAndBackThread = new HideAndBackThread(calibrateFrame.calibratePanel.getCalibratePoint(), sourcePoint, this, backTime);
+        hideAndBackThread = new HideAndBackThread(calibrateFrame.calibratePanel.getCalibratePoint(),this, backTime);
         hideAndBackThread.start();
     }
 
-    private void hide_clicked() {
+    public void hide_clicked() {
         is_hide = !is_hide;
     }
 
     private void set_back_time_clicked() {
-        setBackTimeFrame.setVisible(true);
+        backTime=Integer.parseInt(JOptionPane.showInputDialog("set back time :"));
+        set_back_time.title="Back time:"+backTime+"s";
     }
 
     private void calibration_clicked() {
@@ -52,9 +50,9 @@ public class ClickedPanel extends JPanel {
     private void resizeAndPaintAllButtons(Graphics2D g2d) {
         back_and_hide.setBound(left + width / 3, top, 2 * width / 15, height);
         hide.setBound(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height);
-        set_back_time.setBound(left + width / 3 + width * 4 / 15, top, width / 15, height / 2);
-        calibration.setBound(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2);
-        close.setBound(left + width - width / 50, top, width / 50, height / 4);
+        set_back_time.setBound(left + width / 3 + width * 4 / 15, top, width / 5, height / 2);
+        calibration.setBound(left + width / 3 + 4 * width / 15, top + height / 2, width / 5, height / 2);
+        close.setBound(left + width-height / 5, top, height / 5, height / 5);
 
         back_and_hide.paintRect(g2d, Color.darkGray, is_hide);
         hide.paintRect(g2d, Color.lightGray, is_hide);
@@ -178,7 +176,7 @@ public class ClickedPanel extends JPanel {
             super.mouseClicked(e);
             switch (judgeFlag(e.getX(), e.getY())) {
                 case 5:
-                    back_and_hide_clicked(e.getPoint());
+                    back_and_hide_clicked();
                     break;
                 case 6:
                     hide_clicked();
@@ -194,10 +192,6 @@ public class ClickedPanel extends JPanel {
                     break;
             }
             repaint();
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
         }
 
         @Override
@@ -223,6 +217,7 @@ public class ClickedPanel extends JPanel {
             System.out.println("press");
         }
     };
+
 
     public ClickedPanel(HiderFrame hiderFrame) {
         this.setLayout(null);
