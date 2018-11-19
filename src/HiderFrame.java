@@ -25,7 +25,7 @@ public class HiderFrame extends JFrame {
             }
             @Override
             public void keyPressed(KeyEvent e){
-                if(e.getKeyCode()==KeyEvent.VK_DOWN){
+                if(e.getKeyCode()==KeyEvent.VK_B){
                     System.out.println("down");
                     clickedPanel.back_and_hide_clicked();
                     clickedPanel.repaint();
