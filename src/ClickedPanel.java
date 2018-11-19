@@ -21,11 +21,13 @@ public class ClickedPanel extends JPanel {
     private ButtonRect set_back_time = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 15, height / 2, "set back time");
     private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 15, height / 2, "calibrate");
     private ButtonRect close = new ButtonRect(left + width * 19 / 20, top, width / 20, height / 10, "close");
+    private HiderFrame hiderFrame;
     private CalibrateFrame calibrateFrame = new CalibrateFrame();
-
+    public SetBackTimeFrame setBackTimeFrame=new SetBackTimeFrame(this);
 
     private void back_and_hide_clicked(Point sourcePoint) {
         HideAndBackThread hideAndBackThread;
+        System.out.println(backTime);
         hideAndBackThread = new HideAndBackThread(calibrateFrame.calibratePanel.getCalibratePoint(), sourcePoint, this, backTime);
         hideAndBackThread.start();
     }
@@ -35,7 +37,7 @@ public class ClickedPanel extends JPanel {
     }
 
     private void set_back_time_clicked() {
-
+        setBackTimeFrame.setVisible(true);
     }
 
     private void calibration_clicked() {
@@ -44,7 +46,7 @@ public class ClickedPanel extends JPanel {
 
 
     private void close_clicked() {
-
+        hiderFrame.dispose();
     }
 
     private void resizeAndPaintAllButtons(Graphics2D g2d) {
@@ -225,6 +227,7 @@ public class ClickedPanel extends JPanel {
     public ClickedPanel(HiderFrame hiderFrame) {
         this.setLayout(null);
         this.setOpaque(false);
+        this.hiderFrame=hiderFrame;
         setBackground(Color.red);
         this.addMouseMotionListener(mouseMotionAdapter);
         this.addMouseListener(mouseAdapter);
