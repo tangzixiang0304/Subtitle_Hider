@@ -24,7 +24,7 @@ public class HideAndBackThread extends Thread {
     @Override
     public void run() {
         if(calibratePoint==null){
-            JOptionPane.showMessageDialog(null,"Please press CAL to calibrate a point first","please calibrate",JOptionPane.YES_OPTION);
+            JOptionPane.showMessageDialog(null,"Please press Calibrate to calibrate a point first","please calibrate",JOptionPane.YES_OPTION);
             return;
         }
         Point sourcePoint=MouseInfo.getPointerInfo().getLocation();
@@ -33,27 +33,38 @@ public class HideAndBackThread extends Thread {
         clickedPanel.is_hide = true;
         robot.mouseMove(calibratePoint.x, calibratePoint.y);
         try {
-            Thread.sleep(100);
+            Thread.sleep(10);
         } catch (Exception e) {
             e.printStackTrace();
         }
         robot.mousePress(KeyEvent.BUTTON1_MASK);
         robot.mouseRelease(KeyEvent.BUTTON1_MASK);
         try {
-            Thread.sleep(100);
+            Thread.sleep(10);
         } catch (Exception e) {
             e.printStackTrace();
         }
         robot.keyPress(KeyEvent.VK_LEFT);
 
         try {
-            Thread.sleep(100);
+            Thread.sleep(10);
         } catch (Exception e) {
             e.printStackTrace();
         }
         robot.keyRelease(KeyEvent.VK_LEFT);
 
+
+        robot.mouseMove(clickedPanel.left+clickedPanel.width/20, clickedPanel.top+clickedPanel.height/20);
+        robot.mousePress(KeyEvent.BUTTON1_MASK);
+//        try {
+//            Thread.sleep(10);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        robot.mouseRelease(KeyEvent.BUTTON1_MASK);
+
         robot.mouseMove(sourcePoint.x, sourcePoint.y);
+
         try {
             Thread.sleep(backTime * 1000);
         } catch (Exception e) {
@@ -61,6 +72,7 @@ public class HideAndBackThread extends Thread {
         }
         System.out.println("is_hide=false");
         clickedPanel.is_hide = false;
-        robot.mouseMove(sourcePoint.x, sourcePoint.y+1);
+        clickedPanel.repaint();
+
     }
 }

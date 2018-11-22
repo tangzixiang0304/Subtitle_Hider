@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ClickedPanel extends JPanel {
-    private int left = 50;
-    private int top = 200;
-    private int width = 800;
-    private int height = 70;
+    public int left = 50;
+    public int top = 200;
+    public int width = 800;
+    public int height = 70;
     private int leftToMouse;
     private int upToMouse;
     private int moveOrChangeSizeFlag_Drag = 0;
