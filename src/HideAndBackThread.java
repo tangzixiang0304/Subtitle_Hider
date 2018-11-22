@@ -18,7 +18,6 @@ public class HideAndBackThread extends Thread {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -33,21 +32,21 @@ public class HideAndBackThread extends Thread {
         clickedPanel.is_hide = true;
         robot.mouseMove(calibratePoint.x, calibratePoint.y);
         try {
-            Thread.sleep(10);
+            Thread.sleep(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
         robot.mousePress(KeyEvent.BUTTON1_MASK);
         robot.mouseRelease(KeyEvent.BUTTON1_MASK);
         try {
-            Thread.sleep(10);
+            Thread.sleep(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
         robot.keyPress(KeyEvent.VK_LEFT);
 
         try {
-            Thread.sleep(10);
+            Thread.sleep(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,11 +55,11 @@ public class HideAndBackThread extends Thread {
 
         robot.mouseMove(clickedPanel.left+clickedPanel.width/20, clickedPanel.top+clickedPanel.height/20);
         robot.mousePress(KeyEvent.BUTTON1_MASK);
-//        try {
-//            Thread.sleep(10);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         robot.mouseRelease(KeyEvent.BUTTON1_MASK);
 
         robot.mouseMove(sourcePoint.x, sourcePoint.y);

@@ -19,7 +19,7 @@ public class ClickedPanel extends JPanel {
     private ButtonRect hide = new ButtonRect(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height, "HIDE");
     public ButtonRect set_back_time = new ButtonRect(left + width / 3 + width * 4 / 15, top, width / 5, height / 2, "Back time:2s");
     private ButtonRect calibration = new ButtonRect(left + width / 3 + 4 * width / 15, top + height / 2, width / 5, height / 2, "Calibrate");
-    private ButtonRect close = new ButtonRect(left + width-width/19, top, width / 19, width/19, "");
+    private CloseButtonRect close = new CloseButtonRect((int)(left + width-1.2*height / 5), (int)(top+0.2*height/5), height / 5, "");
     private HiderFrame hiderFrame;
     private CalibrateFrame calibrateFrame = new CalibrateFrame();
 
@@ -52,12 +52,12 @@ public class ClickedPanel extends JPanel {
         hide.setBound(left + width / 3 + width * 2 / 15, top, width * 2 / 15, height);
         set_back_time.setBound(left + width / 3 + width * 4 / 15, top, width / 5, height / 2);
         calibration.setBound(left + width / 3 + 4 * width / 15, top + height / 2, width / 5, height / 2);
-        close.setBound(left + width-height / 5, top, height / 5, height / 5);
+        close.setBound((int)(left + width-0.9*height / 6), (int)(top+0.9*height/6), (int)(height / 6));
 
-        back_and_hide.paintRect(g2d, Color.darkGray, is_hide);
-        hide.paintRect(g2d, Color.lightGray, is_hide);
-        set_back_time.paintRect(g2d, Color.black, is_hide);
-        calibration.paintRect(g2d, Color.darkGray, is_hide);
+        back_and_hide.paintRect(g2d, Color.pink, is_hide);
+        hide.paintRect(g2d, Color.red, is_hide);
+        set_back_time.paintRect(g2d, Color.lightGray, is_hide);
+        calibration.paintRect(g2d, Color.pink, is_hide);
         close.paintRect(g2d, Color.red, is_hide);
     }
 
@@ -196,13 +196,10 @@ public class ClickedPanel extends JPanel {
 
         @Override
         public void mouseExited(MouseEvent e) {
-            if (is_hide) {
-                hide.isOverlapped = false;
-                back_and_hide.isOverlapped = false;
-                set_back_time.isOverlapped = false;
-                calibration.isOverlapped = false;
-            }
-
+            hide.isOverlapped = false;
+            back_and_hide.isOverlapped = false;
+            set_back_time.isOverlapped = false;
+            calibration.isOverlapped = false;
             repaint();
         }
 
@@ -236,9 +233,12 @@ public class ClickedPanel extends JPanel {
         g2.setColor(Color.gray);
         if (is_hide) {
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-                    0.5f));
+                    0.3f));
         }
-        g2.fillRect(left, top, width, height);
+        Image im = Toolkit.getDefaultToolkit().getImage(Panel.class.getResource("/bg2.png"));
+        g2.drawImage(im, left, top,width,height,this);
+
+//        g2.fillRect(left, top, width, height);
         resizeAndPaintAllButtons(g2);
     }
 }

@@ -1,62 +1,55 @@
-import javax.swing.*;
 import java.awt.*;
 
-public class ButtonRect {
-    int left;
-    int top;
-    int width;
-    int height;
+public class CloseButtonRect {
+    int BX;
+    int BY;
+    int BR;
     boolean isOverlapped;
     public String title;
 
-    public ButtonRect(int left,int top ,int width,int height,String title){
-        this.left=left;
-        this.top=top;
-        this.width=width;
-        this.height=height;
+    public CloseButtonRect(int BX,int BY ,int BR,String title){
+        this.BX=BX;
+        this.BY=BY;
+        this.BR=BR;
         this.title=title;
     }
 
-    public void setBound(int left,int top ,int width,int height){
-        this.left=left;
-        this.top=top;
-        this.width=width;
-        this.height=height;
+    public void setBound(int BX,int BY ,int BR){
+        this.BX=BX;
+        this.BY=BY;
+        this.BR=BR;
     }
 
     public boolean pointInRect(int x,int y){
-        if(x>left && x<left+width && y>top && y<top+height){
+        if((x-BX)*(x-BX)+(y-BY)*(y-BY)<BR*BR){
             return true;
         }
         return false;
     }
 
 
-    public void paintRect(Graphics2D g,Color color,boolean hide){
+    public void paintRect(Graphics2D g, Color color, boolean hide){
         g.setColor(color);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 0.3f));
         if(!hide){
             if(isOverlapped){
                 g.setColor(Color.white);
-
             }
-            g.fillRect(left,top,width,height);
+            g.fillOval(BX-BR,BY-BR,2*BR,2*BR);
             g.setColor(Color.gray);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     0.7f));
             g.setFont(new Font("Times New Roman",Font.BOLD,18));
-            g.drawString(title,left+width/4,top+(int)(height/1.5));
         }
 
         if(hide){
             if(isOverlapped){
                 g.setColor(Color.black);
-                g.drawRect(left,top,width,height);
+                g.drawOval(BX-BR,BY-BR,2*BR,2*BR);
             }
         }
 
 
     }
-
 }
